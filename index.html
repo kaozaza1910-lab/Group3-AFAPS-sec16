@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Share Flex Message Ready</title>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
@@ -13,29 +12,32 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background: #f0f2f5;
+            background: #eef2ff;
         }
         .msg {
             display: none;
-            padding: 30px;
+            padding: 20px 30px;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             font-size: 18px;
             text-align: center;
             color: #333;
-            max-width: 80%;
         }
-        #errorMsg { color: #d9534f; }
+        #errorMsg { 
+            color: #d9534f;
+            word-break: break-word;
+            max-width: 80vw;
+        }
     </style>
 </head>
 <body>
-    <div class="msg" id="loadingMsg">⏳ กำลังเริ่มต้นและเตรียมการแชร์...</div>
-    <div class="msg" id="successMsg">✅ แชร์สำเร็จแล้ว</div>
+    <div class="msg" id="loadingMsg">⏳ กำลังเริ่มต้น LIFF และเตรียมการแชร์...</div>
+    <div class="msg" id="successMsg">✅ แชร์ให้เพื่อน ๆ สำเร็จแล้ว</div>
     <div class="msg" id="errorMsg">❌ เกิดข้อผิดพลาดในการแชร์</div> 
 
     <script>
-        // กำหนด Flex Message 
+        // กำหนด Flex Message (โครงสร้าง Carousel)
         const flexMessage = {
             type: "flex",
             altText: "📚 แนะนำหนังสือน่าอ่าน โดย นตท.ชั้นปีที่ 2",
@@ -47,7 +49,6 @@
                         "body": {
                             "type": "box",
                             "layout": "vertical",
-                            "paddingAll": "none",
                             "contents": [
                                 {
                                     "type": "image",
@@ -66,9 +67,11 @@
                                     "position": "absolute",
                                     "offsetTop": "68%",
                                     "offsetStart": "36%",
-                                    "offsetEnd": "3%"
+                                    "style": "secondary",
+                                    "height": "sm"
                                 }
-                            ]
+                            ],
+                            "paddingAll": "none"
                         }
                     },
                     {
@@ -91,17 +94,17 @@
                             "contents": [
                                 {
                                     "type": "text",
-                                    "text": "ชื่อหนังสือ:กิมหย้งคิด แจ็คหม่าทำ",
+                                    "text": "กิมหย้งคิด แจ็คหม่าทำ",
                                     "weight": "bold",
                                     "size": "md",
-                                    "color": "#ffffff",
+                                    "color": "#FFFFFF",
                                     "wrap": true
                                 },
                                 {
                                     "type": "text",
                                     "text": "แนะนำโดย : นตท.ภูตะวัน กุลจันทร์",
                                     "size": "sm",
-                                    "color": "#f0f0f0",
+                                    "color": "#FFFFFF",
                                     "wrap": true
                                 }
                             ]
@@ -110,4 +113,87 @@
                     {
                         "type": "bubble",
                         "hero": {
-                            "type": "image
+                            "type": "image",
+                            "url": "https://img2.pic.in.th/6f10a12f3b8824c97ff58f4bcf8cf60e.jpg",
+                            "size": "full",
+                            "aspectMode": "cover",
+                            "aspectRatio": "2.9:3",
+                            "action": {
+                                "type": "uri",
+                                "uri": "https://youtu.be/bYXLwa6rfNo?si=-4s277LHB6D9_7pT"
+                            }
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "backgroundColor": "#9370DB",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "สรุปฟิสิกส์ ม.ปลาย",
+                                    "weight": "bold",
+                                    "size": "md",
+                                    "color": "#FFFFFF",
+                                    "wrap": true
+                                },
+                                {
+                                    "type": "text",
+                                    "text": "แนะนำโดย : นตท.สราวุธ แก้วอักษร",
+                                    "size": "sm",
+                                    "color": "#FFFFFF",
+                                    "wrap": true
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        };
+
+        function displayMessage(id) {
+            document.querySelectorAll('.msg').forEach(el => el.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+
+        async function main() {
+            displayMessage('loadingMsg');
+            
+            try {
+                // เริ่มต้น LIFF (ตรวจสอบ ID ให้ตรงกับใน LINE Developers Console)
+                await liff.init({ liffId: "2008875071-8JFgYAzk" }); 
+
+                if (!liff.isLoggedIn()) {
+                    liff.login();
+                    return;
+                }
+                
+                // ตรวจสอบ API การแชร์
+                if (!liff.isApiAvailable("shareTargetPicker")) {
+                    throw new Error("เครื่องมือแชร์ไม่รองรับในเบราว์เซอร์นี้ โปรดเปิดผ่านแอป LINE");
+                }
+
+                // เรียกหน้าต่างแชร์
+                const result = await liff.shareTargetPicker([flexMessage]);
+                
+                if (result) {
+                    displayMessage('successMsg');
+                    setTimeout(() => liff.closeWindow(), 2000);
+                } else {
+                    // กรณีผู้ใช้กดยกเลิก
+                    liff.closeWindow();
+                }
+
+            } catch (err) {
+                console.error("Share Error:", err);
+                const errorMsgElement = document.getElementById('errorMsg');
+                errorMsgElement.innerHTML = `❌ เกิดข้อผิดพลาด: <br> ${err.message || 'ไม่ทราบสาเหตุ'}`;
+                displayMessage('errorMsg'); 
+                // หากต้องการให้ปิดอัตโนมัติเมื่อพลาด
+                // setTimeout(() => liff.closeWindow(), 5000); 
+            }
+        }
+
+        main();
+    </script>
+</body>
+</html>
