@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Flex Message Ready</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #f0f2f5;
+        }
+        .msg {
+            display: none;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            font-size: 18px;
+            text-align: center;
+            color: #333;
+            max-width: 80%;
+        }
+        #errorMsg { color: #d9534f; }
+    </style>
+</head>
+<body>
+    <div class="msg" id="loadingMsg">⏳ กำลังเริ่มต้นและเตรียมการแชร์...</div>
+    <div class="msg" id="successMsg">✅ แชร์สำเร็จแล้ว</div>
+    <div class="msg" id="errorMsg">❌ เกิดข้อผิดพลาดในการแชร์</div> 
+
+    <script>
+        // กำหนด Flex Message 
+        const flexMessage = {
+            type: "flex",
+            altText: "📚 แนะนำหนังสือน่าอ่าน โดย นตท.ชั้นปีที่ 2",
+            contents: {
+                "type": "carousel",
+                "contents": [
+                    {
+                        "type": "bubble",
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "paddingAll": "none",
+                            "contents": [
+                                {
+                                    "type": "image",
+                                    "url": "https://img5.pic.in.th/file/secure-sv1/d4df8eada81cc0222e33e4781455171d.png",
+                                    "size": "full",
+                                    "aspectMode": "cover",
+                                    "aspectRatio": "2.3:3"
+                                },
+                                {
+                                    "type": "button",
+                                    "action": {
+                                        "type": "uri",
+                                        "label": "ดูรายละเอียด",
+                                        "uri": "https://liff.line.me/2008875071-8JFgYAzk"
+                                    },
+                                    "position": "absolute",
+                                    "offsetTop": "68%",
+                                    "offsetStart": "36%",
+                                    "offsetEnd": "3%"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "bubble",
+                        "hero": {
+                            "type": "image",
+                            "url": "https://img2.pic.in.th/pic/S__6610986.jpg",
+                            "size": "full",
+                            "aspectMode": "cover",
+                            "aspectRatio": "2.9:3",
+                            "action": {
+                                "type": "uri",
+                                "uri": "https://youtube.com/shorts/4DgXiGixh9U?si=3DGoD-vi2s6pZsZZ"
+                            }
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "backgroundColor": "#C24740",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "ชื่อหนังสือ:กิมหย้งคิด แจ็คหม่าทำ",
+                                    "weight": "bold",
+                                    "size": "md",
+                                    "color": "#ffffff",
+                                    "wrap": true
+                                },
+                                {
+                                    "type": "text",
+                                    "text": "แนะนำโดย : นตท.ภูตะวัน กุลจันทร์",
+                                    "size": "sm",
+                                    "color": "#f0f0f0",
+                                    "wrap": true
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "bubble",
+                        "hero": {
+                            "type": "image
